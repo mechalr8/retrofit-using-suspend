@@ -3,26 +3,26 @@ package com.example.gfgretrofittutorial
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.gfgretrofittutorial.API.EntryAPI
-import com.example.gfgretrofittutorial.API.RetrofitHelper
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import com.example.gfgretrofittutorial.model.EntryList
+import com.example.gfgretrofittutorial.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
-    @OptIn(DelicateCoroutinesApi::class)
+    private val viewModel by viewModels<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val quotesApi = RetrofitHelper.getInstance().create(EntryAPI::class.java)
-        // launching a new coroutine
-        GlobalScope.launch {
-            var i = 1
-            val result = quotesApi.getQuotes()
-            result.body()?.entries?.forEach {
-                Log.d("MainActivity $i", it.toString())
-                i++
+        viewModel.getEntries()
+        viewModel.apiCaller.observe(
+            this
+
+        ) { entry ->
+            if (entry is EntryList) {
+                entry.entries.forEach {
+                    Log.d("Data:", it.toString())
+                }
             }
         }
     }
