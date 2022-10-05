@@ -5,14 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
+import com.example.gfgretrofittutorial.databinding.ActivityMainBinding
 import com.example.gfgretrofittutorial.model.EntryList
 import com.example.gfgretrofittutorial.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainActivityViewModel>()
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         viewModel.getEntries()
         viewModel.apiCaller.observe(
